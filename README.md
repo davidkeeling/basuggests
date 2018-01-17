@@ -5,7 +5,7 @@
 
 ## Context
 
-1 Billion Acts of Peace is a web app by the PeaceJam Foundation that collects large and small "acts of peace" from people and organizations around the world, connecting and inspiring people to work together toward world peace. Each act belongs to 1 or more 10 focus areas, social issues critical to achieving world peace as selected by PeaceJam's board of Nobel Peace Laureates.
+1 Billion Acts of Peace is a web app by the PeaceJam Foundation that collects large and small "acts of peace" from people and organizations around the world, connecting and inspiring people to work together toward world peace. Each act belongs to 1 or more of the 10 focus areas -- social issues critical to achieving world peace as selected by PeaceJam's board of Nobel Peace Laureates.
 
 ## Problem Statement
 

@@ -26,7 +26,7 @@ Used to fetch data for initially training the model, as well as
 in the online learning pipeline to fetch new content to retrain.
 
 Relies on the private Billion Acts repository for remote connection
-to Google App Engine, and the Act of Peace data structure.
+to Google App Engine and the Act of Peace data structure.
 */
 
 const dateFormat = "20060102-1504"
