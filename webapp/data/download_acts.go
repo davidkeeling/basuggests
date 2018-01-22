@@ -41,7 +41,8 @@ func dateToString(t time.Time) string {
 // newer than the date specified in command line arguments:
 var errNoStartDate = errors.New("No latest date specified")
 
-func argsToDate(args []string) (time.Time, error) {
+func argsToDate() (time.Time, error) {
+	args := os.Args
 	if len(args) < 2 {
 		return time.Time{}, errNoStartDate
 	}
@@ -50,16 +51,17 @@ func argsToDate(args []string) (time.Time, error) {
 
 func projectRowHeader() []string {
 	return []string{
-		"title",
+		"name",
 		"issues",
 		"context",
 		"plan",
 		"accomplishments",
 		"description",
-		"call_to_action",
-		"focusareas",
+		"callToAction",
+		"focusAreas",
 		"created",
-		"projectid",
+		"userID",
+		"projectID",
 	}
 }
 
@@ -67,6 +69,10 @@ func getProjectRow(proj *peace.Project) []string {
 	focusareaStrings := []string{}
 	for _, fa := range proj.AreaID {
 		focusareaStrings = append(focusareaStrings, strconv.Itoa(int(fa)))
+	}
+	var userID string
+	if proj.UserKey != nil {
+		userID = proj.UserKey.Encode()
 	}
 	return []string{
 		proj.Name,
@@ -78,6 +84,7 @@ func getProjectRow(proj *peace.Project) []string {
 		proj.CtaDescription,
 		strings.Join(focusareaStrings, " "),
 		dateToString(proj.Created),
+		userID,
 		proj.ProjectID,
 	}
 }
@@ -89,7 +96,7 @@ func main() {
 
 	query := datastore.NewQuery("Project").Order("-Created")
 
-	startDate, err := argsToDate(os.Args)
+	startDate, err := argsToDate()
 	if err == nil {
 		log.Infof(c, "Fetching acts created after %v", startDate)
 		query = query.Filter("Created >", startDate)
