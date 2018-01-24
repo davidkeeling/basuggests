@@ -69,6 +69,7 @@ function RecommenderChoices (props) {
           <input type="hidden" name="googleID" value={user.id} />
         )}
         <input type="hidden" name="likes" value={likes} />
+        <input type="hidden" name="projectID" value={props.projectID} />
         <input type="hidden" name="description" value={props.description} />
         <button type="submit">Find acts with similar text</button>
       </form>
