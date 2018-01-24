@@ -273,7 +273,13 @@ function ActRecommender(props) {
       <footer>
         <div className="column">
           <div>
-            <a href="https://github.com/davidkeeling" target="_blank">David Keeling</a>
+            David Keeling
+          </div>
+          <div>
+            <a href="https://github.com/davidkeeling/basuggests" target="_blank">
+              <img src="/static/img/github.png" style={{ height: "1em", verticalAlign: "middle" }} />
+              <span style={{ paddingLeft: ".25em" }}>basuggests on github</span>
+            </a>
           </div>
         </div>
         <div className="column">
