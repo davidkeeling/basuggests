@@ -17,7 +17,7 @@ class TopicModelActRecommender(object):
         self.neighbors = NearestNeighbors(
             n_neighbors=3,
             radius=1.0,
-            metric='minkowski'
+            metric='cosine'
         )
 
     def random_suggestion(self, suggestions):
@@ -27,21 +27,20 @@ class TopicModelActRecommender(object):
             random_suggestion = np.random.randint(0, upper)
         return self.projectIDs[random_suggestion]
 
-    def top_recs(self, act, n=3):
-        print('========LDA=========')
+    def top_recs(self, act, n=3, likes=[]):
         description = act['description']
         act_word_counts = self.vectorizer.transform([description])
         modeled_act = self.lda.transform(act_word_counts)
         suggestion_indices = self.neighbors.kneighbors(
             X=modeled_act,
-            n_neighbors=3,
+            # fetch enough neighbors that we can remove any that the user has
+            # has already liked (param likes) and still return at least n:
+            n_neighbors=20,
             return_distance=False
         )
         suggestions = self.projectIDs[suggestion_indices]
-        # print(suggestions, type(suggestions))
-        # Don't suggest the same act that was input:
-        # suggestions = suggestions[suggestions != act['projectID']]
-        return list(suggestions[0])
+        suggestions = [s for s in list(suggestions[0]) if s not in likes]
+        return suggestions[:n]
 
     def fit(self, acts, original_acts):
         self.acts = original_acts

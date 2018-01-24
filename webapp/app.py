@@ -74,7 +74,7 @@ def get_act_data(projectID):
     act = act.iloc[0]
     return act
 
-def recommend_collab(user_id, act_id, description=None):
+def recommend_collab(user_id, act_id, description=None, likes=[]):
     act_index = collab_model.act_id_to_index(act_id)
     if act_index == -1 and bool(description):
         # act is unknown to collaborative model. Try to find an act that has
@@ -91,36 +91,40 @@ def recommend_collab(user_id, act_id, description=None):
         if act_id == -1:
             abort(400, 'Unknown act and no known similar acts')
             return
+    return collab_model.top_recs(user_id, act_id, likes=likes)
 
-    return collab_model.top_recs(user_id, act_id)
 
-
-def recommend_lda(description):
-    return lda_model.top_recs({
-        'description': description
-    })
+def recommend_lda(description, likes):
+    return lda_model.top_recs(
+        {'description': description},
+        likes=likes
+    )
 
 
 @app.route('/recommend/<recommender>', methods=['GET', 'POST'])
 def suggest(recommender):
     likes = request.form.get('likes')
+    likes = json.loads(likes or '[]')
     googleID = request.form.get('googleID')
     if bool(likes) and bool(googleID):
-        likes = json.loads(likes)
         update_user_likes(googleID, likes)
+
+    act_id = request.form.get('projectID')
+    if act_id not in likes:
+        likes.append(act_id)
 
     if recommender == 'lda':
         description = request.form.get('description')
         if not bool(description):
             abort(400, 'Param "description" is required')
             return
+        # lemmatize with spaCy:
         description = tokenizer.tokenize_act(description)
-        act_ids = recommend_lda(description)
+        act_ids = recommend_lda(description, likes)
     elif recommender == 'collab':
         user_id = request.form.get('userID')
-        act_id = request.form.get('projectID')
         description = request.form.get('description')
-        act_ids = recommend_collab(user_id, act_id, description)
+        act_ids = recommend_collab(user_id, act_id, description, likes)
     elif recommender == 'random':
         act_indices = np.random.randint(0, acts.shape[0], 3)
         act_ids = list(acts.iloc[act_indices]['projectID'].values)

@@ -77,7 +77,6 @@ class CollaborativeActRecommender(object):
                 return None
             # act is unknown. No use to impute it as a liked act for the user
             # because there will not be any similar acts to it
-            print('using self fit because act is unknown')
             return self._get_self_fit()
 
         loves = None
@@ -89,22 +88,18 @@ class CollaborativeActRecommender(object):
                 # impute the current act as a liked act. This is the standard
                 # situation for collaborative filtering, and has the fastest
                 # computation time
-                print('using self fit because user has rated {} items'.format(num_acts_rated_by_user))
                 return self._get_self_fit()
             # user is known, but only has a few ratings
-            print('user is known')
             loves = self.loves.copy()
         else:
             # user is unknown:
             loves = self.loves.copy()
             user_index = -1
-            print('user is unknown')
         # Include this act as a liked act temporarily:
         loves = loves.append([{
             'userID': user_id,
             'projectID': act_id
         }])
-        print('added temporary like for user')
         return self._process_for_fit(loves)
 
 
@@ -150,7 +145,7 @@ class CollaborativeActRecommender(object):
         return np.array(all_ratings)
 
 
-    def top_recs(self, user_id, act_id, n=3):
+    def top_recs(self, user_id, act_id, n=3, likes=[]):
         """
         First calls self.predict_user to calculate predicted ratings for all
         acts there is enough information for, then sorts these ratings and
@@ -171,8 +166,9 @@ class CollaborativeActRecommender(object):
             item for item in item_index_sorted_by_pred_rating
             if item not in items_rated_by_this_user
         ]
-        unrated_act_ids = acts[unrated_items_by_pred_rating[-n:]]
-        return list(unrated_act_ids)
+        unrated_act_ids = acts[unrated_items_by_pred_rating]
+        unrated_act_ids = [act_id for act_id in list(unrated_act_ids) if act_id not in likes]
+        return unrated_act_ids[-n:]
 
 
     def user_id_to_index(self, user_id, users=None):

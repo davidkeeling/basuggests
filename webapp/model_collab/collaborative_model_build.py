@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 import _pickle as pickle
 
@@ -21,7 +20,6 @@ def get_loves():
     # muddying the model.
     flags = pd.read_csv('data/content_flags.csv')
     admin_ids = flags[flags['field'] == 'admin_id']['value']
-    print(acts.head())
     for admin_id in admin_ids:
         acts = acts[acts['userID'] != admin_id]
     acts = acts[['projectID', 'userID']]
@@ -33,5 +31,5 @@ if __name__ == "__main__":
     cf_recommender = CollaborativeActRecommender(neighborhood_size=100)
     loves = get_loves()
     cf_recommender.fit(loves)
-    with open('collab/model.pkl', 'wb') as file:
+    with open('model_collab/model.pkl', 'wb') as file:
         pickle.dump(cf_recommender, file)
