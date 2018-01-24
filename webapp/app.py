@@ -141,8 +141,11 @@ def index():
     user = None
     if 'google_token' in session:
         user = google.get('userinfo').data
-        likes = get_user_likes(user['id'])
-        user['likes'] = likes
+        if user and user.get('id'):
+            likes = get_user_likes(user.get('id'))
+            user['likes'] = likes
+        else:
+            user = None
     return render_template('index.html', user=json.dumps(user))
 
 @app.route('/login', methods=['GET'])
