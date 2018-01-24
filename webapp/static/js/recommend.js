@@ -250,7 +250,10 @@ function ActRecommender(props) {
   return (
     <div>
       <header className="page_header">
-        <h1>Get act of peace recommendations</h1>
+        <h1>Browse Acts of Peace</h1>
+        <p style={{ fontSize: 'smaller' }}>
+          from <a href="https://www.billionacts.org" target="_blank">1 Billion Acts of Peace</a>
+        </p>
         <div className="login">
           {props.user ? (
             <span>
@@ -268,7 +271,19 @@ function ActRecommender(props) {
       <ActList user={user} />
 
       <footer>
-        <div>David Keeling</div>
+        <div className="column">
+          <div>
+            <a href="https://github.com/davidkeeling" target="_blank">David Keeling</a>
+          </div>
+        </div>
+        <div className="column">
+          <div>
+            <a href="http://www.peacejam.org" target="_blank">The PeaceJam Foundation</a>
+          </div>
+          <div>
+            <a href="http://www.billionacts.org" target="_blank">1 Billion Acts of Peace</a>
+          </div>
+        </div>
       </footer>
     </div>
   );
