@@ -180,5 +180,4 @@ if __name__ == '__main__':
     mongo_client = pymongo.MongoClient()
     db = mongo_client.mydb2
     collection = db.likes
-    app.run(host='0.0.0.0', port=3000, debug=True)
-    # app.run(host='0.0.0.0', port=8105, threaded=True)
+    app.run(host='0.0.0.0', port=3000, threaded=True, debug=False)
