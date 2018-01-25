@@ -13,8 +13,8 @@ function ActCard(props) {
   const { act_data } = props;
   const fontSize = act_data.name.length > 50 ? '.75em' : '1em';
   return (
-    <div className="act_card">
-      <header onClick={props.expand_act(act_data)} style={{ fontSize }}>
+    <div className="act_card" onClick={props.expand_act(act_data)}>
+      <header style={{ fontSize }}>
         <h4><div>{act_data.name}</div></h4>
       </header>
       <div className="description">

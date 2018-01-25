@@ -1,14 +1,13 @@
-
 body {
   margin: 0;
   min-height: 800px;
   position: absolute;
   padding-bottom: 100px;
-  width: 100%;
-}
+  width: 100%; }
+
 body, body * {
-  font-family: sans-serif;
-}
+  font-family: sans-serif; }
+
 footer {
   background-color: #26c6da;
   color: white;
@@ -20,24 +19,21 @@ footer {
   box-sizing: border-box;
   padding: 1em;
   display: flex;
-  justify-content: space-around;
-  .column {
-    line-height: 2em;
-  }
-  a {
-    color: white;
-  }
-}
+  justify-content: space-around; }
+  footer .column {
+    line-height: 2em; }
+  footer a {
+    color: white; }
+
 p {
-  line-height: 1.2;
-}
+  line-height: 1.2; }
+
 a {
   color: #7921b7;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
-}
+  text-decoration: none; }
+  a:hover {
+    text-decoration: underline; }
+
 .page_header {
   position: relative;
   background-color: #7921b7;
@@ -45,64 +41,53 @@ a {
   margin-top: 0;
   margin-bottom: 2em;
   text-align: center;
-  color: white;
-  a {
+  color: white; }
+  .page_header a {
     text-decoration: none;
-    color: white;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-  .login {
+    color: white; }
+    .page_header a:hover {
+      text-decoration: underline; }
+  .page_header .login {
     position: absolute;
     padding: 1em;
     top: 0;
-    right: 0;
-    img {
+    right: 0; }
+    .page_header .login img {
       height: 1em;
       vertical-align: middle;
       border-radius: 50%;
       text-decoration: none;
-      margin-right: .25em;
-    }
-  }
-}
+      margin-right: .25em; }
+
 .hidden {
-  display: none;
-}
+  display: none; }
+
 .content {
   max-width: 600px;
-  margin: 0 auto;
-}
+  margin: 0 auto; }
+
 .results {
   text-align: center;
-  margin-top: 4em;
-  h2 {
-    color: #444;
-  }
-}
+  margin-top: 4em; }
+  .results h2 {
+    color: #444; }
 
 .recommender_choices {
   display: flex;
   justify-content: space-around;
   margin: 2em auto;
-  max-width: 640px;
-  form {
-    button {
-      padding: .75em;
-      border-radius: 5px;
-      border: 1px solid transparent;
-      background-color: white;
-      font-size: larger;
-      background-color: #7921b7;
-      color: white;
-      cursor: pointer;
-      &:hover {
-        background-color: darken(#7921b7, 10%);
-      }
-    }
-  }
-}
+  max-width: 640px; }
+  .recommender_choices form button {
+    padding: .75em;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    background-color: white;
+    font-size: larger;
+    background-color: #7921b7;
+    color: white;
+    cursor: pointer; }
+    .recommender_choices form button:hover {
+      background-color: #5c198c; }
 
 .act {
   height: 400px;
@@ -110,8 +95,8 @@ a {
   max-width: 640px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   position: relative;
-  margin: 1em auto;
-  header {
+  margin: 1em auto; }
+  .act header {
     color: white;
     background-color: #26c6da;
     position: absolute;
@@ -119,19 +104,16 @@ a {
     left: 0;
     top: 0;
     width: 100%;
-    text-align: center;
-    h2 {
+    text-align: center; }
+    .act header h2 {
       margin: 0;
       line-height: 80px;
-      padding: 0 .25em;
-      div {
+      padding: 0 .25em; }
+      .act header h2 div {
         line-height: 1.5em;
         vertical-align: middle;
-        display: inline-block;
-      }
-    }
-  }
-  .description {
+        display: inline-block; }
+  .act .description {
     text-align: left;
     padding: 0 1em;
     box-sizing: border-box;
@@ -140,30 +122,24 @@ a {
     position: absolute;
     top: 80px;
     left: 0;
-    overflow-y: auto;
-    .love_button {
+    overflow-y: auto; }
+    .act .description .love_button {
       float: right;
       width: 3em;
       margin-right: 0;
-      background-color: white;
-      img {
+      background-color: white; }
+      .act .description .love_button img {
         width: 100%;
-        cursor: pointer;
-      }
-    }
-  }
-  .link {
+        cursor: pointer; }
+  .act .link {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 40px;
-    text-align: center;
-    a {
-      line-height: 40px;
-    }
-  }
-}
+    text-align: center; }
+    .act .link a {
+      line-height: 40px; }
 
 .act_card {
   width: 240px;
@@ -172,10 +148,10 @@ a {
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   position: relative;
   margin: .5em;
-    cursor: pointer;
-    cursor: -webkit-zoom-in;
-  cursor: zoom-in;
-  header {
+  cursor: pointer;
+  cursor: -webkit-zoom-in;
+  cursor: zoom-in; }
+  .act_card header {
     color: white;
     background-color: #26c6da;
     position: absolute;
@@ -183,19 +159,16 @@ a {
     left: 0;
     top: 0;
     width: 100%;
-    text-align: center;
-    h4 {
+    text-align: center; }
+    .act_card header h4 {
       margin: 0;
       line-height: 40px;
-      padding: 0 .25em;
-      div {
+      padding: 0 .25em; }
+      .act_card header h4 div {
         line-height: 1em;
         vertical-align: middle;
-        display: inline-block;
-      }
-    }
-  }
-  .description {
+        display: inline-block; }
+  .act_card .description {
     text-align: left;
     padding: 1em;
     box-sizing: border-box;
@@ -203,13 +176,11 @@ a {
     height: 200px;
     position: absolute;
     top: 40px;
-    left: 0;
-    .inner {
+    left: 0; }
+    .act_card .description .inner {
       height: 100%;
-      overflow: hidden;
-    }
-    p {
-      margin: 0;
-    }
-  }
-}
+      overflow: hidden; }
+    .act_card .description p {
+      margin: 0; }
+
+/*# sourceMappingURL=styles.css.map */
