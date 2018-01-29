@@ -1,59 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import _ from 'underscore';
+import Act from './act';
+import ActCard from './act_card';
 
 const rec_headlines = {
   'random': 'Recommendations (chosen at random)',
   'lda': 'Recommendations by text analysis',
   'collab': 'Recommendations based on your likes'
-}
-
-function ActCard(props) {
-  const { act_data } = props;
-  const fontSize = act_data.name.length > 50 ? '.75em' : '1em';
-  return (
-    <div className="act_card" onClick={props.expand_act(act_data)}>
-      <header style={{ fontSize }}>
-        <h4><div>{act_data.name}</div></h4>
-      </header>
-      <div className="description">
-        <div className="inner">
-          <p>{act_data.description}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
-function Act(props) {
-  const { act_data } = props;
-  const fontSize = act_data.name.length > 50 ? '1.25em' : '1.5em';
-  return (
-    <div className="act">
-      <header>
-        <h2 style={{ fontSize }}><div>{act_data.name}</div></h2>
-      </header>
-      <div className="description">
-        <figure className="love_button" onClick={props.love_act}>
-          <img
-            src={props.is_loved ? '/static/img/symbol-color.png' : 'static/img/symbol-grey.png'}
-            onClick={props.love_act}
-          />
-        </figure>
-        {act_data.description.split('\n\r').map((p, i) => (
-          <p key={i}>{p}</p>
-        ))}
-      </div>
-      <div className="link">
-        <a target="_blank" href={`https://www.billionacts.org/act/${act_data.projectID}`}>
-          See on billionacts.org
-        </a>
-      </div>
-    </div>
-  );
-}
+};
 
 function RecommenderChoices (props) {
   const liked_projectIDs = props.likes.map((act) => act.projectID);
@@ -91,7 +46,7 @@ function RecommenderChoices (props) {
   );
 }
 
-class ActList extends React.Component {
+export default class ActRecommender extends React.Component {
   constructor (props) {
     super(props);
 
@@ -145,8 +100,9 @@ class ActList extends React.Component {
     }
     this.setState({
       last_recommendation_engine: url.split('/recommend/')[1],
-      recommendations: []
-    }, function () {
+      recommendations: [],
+      fetching_recommendations: true
+    }, () => {
       $.ajax({
         url: url,
         method: 'POST',
@@ -166,6 +122,7 @@ class ActList extends React.Component {
       return;
     }
     const recommendations = [];
+    let first_shown = false;
     for (var i = 0; i < projectIDs.length; i++) {
       const projectID = projectIDs[i];
       $.ajax({
@@ -173,8 +130,20 @@ class ActList extends React.Component {
         method: 'GET',
         dataType: 'json',
         success: (data) => {
+          if (!first_shown) {
+            first_shown = true;
+            if (this.state.last_recommendation_engine !== 'random') {
+              $('html, body').animate({
+                scrollTop: $('#recommendation_results').offset().top
+              });
+            }
+            data.show_expand_hint = true;
+          }
           recommendations.push(data);
-          this.setState({ recommendations });
+          this.setState({
+            recommendations,
+            fetching_recommendations: false
+          });
         },
         error: (jqXHR, status, err) => {
           console.log('Fetching projects:', jqXHR.responseText);
@@ -190,7 +159,7 @@ class ActList extends React.Component {
       }, () => {
         $('html, body').animate({
           scrollTop: $(this.act_el).offset().top
-        }, 500);
+        });
       });
     };
   }
@@ -205,30 +174,38 @@ class ActList extends React.Component {
                 act_data={this.state.current_act}
                 is_loved={this._liked_act_index(this.state.current_act) !== -1}
                 love_act={this.like_act(this.state.current_act)}
+                show_like_hint={this.state.likes.length === 0}
               />
               <RecommenderChoices
                 get_recommendations={this.get_recommendations}
                 projectID={this.state.current_act.projectID}
                 description={this.state.current_act.description}
-                user={user}
+                user={this.props.user}
                 likes={this.state.likes}
               />
             </div>
           )}
         </div>
 
-        {this.state.recommendations.length > 0 && (
-          <div className="results">
-            <h2>{rec_headlines[this.state.last_recommendation_engine]}</h2>
-            {this.state.recommendations.map((act_data, i) => (
-              <ActCard
-                key={i}
-                act_data={act_data}
-                expand_act={this.expand_act}
-              />
-            ))}
-          </div>
-        )}
+        <div className="results" id="recommendation_results">
+          {this.state.recommendations.length > 0 ? (
+            <div>
+              <h2>{rec_headlines[this.state.last_recommendation_engine]}</h2>
+              {this.state.recommendations.map((act_data, i) => (
+                <ActCard
+                  key={i}
+                  act_data={act_data}
+                  expand_act={this.expand_act}
+                  show_expand_hint={act_data.show_expand_hint && this.state.likes.length == 0}
+                />
+              ))}
+            </div>
+          ) : this.state.fetching_recommendations ? (
+            <div style={{ height: '300px' }}>
+              <h2 style={{ fontStyle: 'italic', opacity: .5 }}>Fetching recommendations...</h2>
+            </div>
+          ) : null}
+        </div>
 
         {this.state.likes.length > 0 && (
           <div className="results">
@@ -246,57 +223,3 @@ class ActList extends React.Component {
     );
   }
 }
-
-function ActRecommender(props) {
-  return (
-    <div>
-      <header className="page_header">
-        <h1>Browse Acts of Peace</h1>
-        <p style={{ fontSize: 'smaller' }}>
-          from <a href="https://www.billionacts.org" target="_blank">1 Billion Acts of Peace</a>
-        </p>
-        <div className="login">
-          {props.user ? (
-            <span>
-              {props.user.picture && (
-                <img src={props.user.picture} title={props.user.email} />
-              )}
-              <a href="/logout">Logout</a>
-            </span>
-          ) : (
-            <a href="/login">Login</a>
-          )}
-        </div>
-      </header>
-
-      <ActList user={user} />
-
-      <footer>
-        <div className="column">
-          <div>
-            David Keeling
-          </div>
-          <div>
-            <a href="https://github.com/davidkeeling/basuggests" target="_blank">
-              <img src="/static/img/github.png" style={{ height: "1em", verticalAlign: "middle" }} />
-              <span style={{ paddingLeft: ".25em" }}>basuggests on github</span>
-            </a>
-          </div>
-        </div>
-        <div className="column">
-          <div>
-            <a href="http://www.peacejam.org" target="_blank">The PeaceJam Foundation</a>
-          </div>
-          <div>
-            <a href="http://www.billionacts.org" target="_blank">1 Billion Acts of Peace</a>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
-
-ReactDOM.render(
-  <ActRecommender user={user} />,
-  document.getElementById('app')
-);

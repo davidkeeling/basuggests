@@ -2,7 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: [
-    './static/js/recommend.js'
+    './static/js/index.js'
   ],
   module: {
     rules: [
